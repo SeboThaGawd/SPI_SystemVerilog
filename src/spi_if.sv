@@ -1,21 +1,15 @@
-interface spi_if #(int NUM_NODES)
-(input clk);
+interface spi_intf #(
+    parameter NUM_NODES = 4,
+    DATA_WIDTH = 8
+    ) 
+    (input clk, rst);
 
-    logic miso;
-    logic mosi;
+    logic miso, mosi, en, sclk;
     logic [$clog2(NUM_NODES) - 1: 0] sel;
-    logic en;
+    logic [DATA_WIDTH-1:0] data_in, data_out;
 
-    modport node (
-        output miso;
-        input mosi;
-        input en;
-    );
+    modport node (input data_in, mosi, en, sclk, rst, output miso, data_out);
 
-    modport main (
-        input miso;
-        output mosi;
-        input sel;
-    );
+    modport main (input miso, data_in, clk, rst output mosi, sel, data_out, sclk);
 
-endinterface
+endinterface: spi_intf
